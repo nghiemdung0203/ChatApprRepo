@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+.container {
+  width: 100%;
+  height: 100vh;
+  background: url('../Assets/blue-copy-space-digital-background_23-2148821698.jpg') no-repeat;
+  background-size: cover;
+}
+
+.wrapper {
+  width: 450px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: auto;
+  padding: 10px;
+  position: relative;
+  backdrop-filter:blur(30px);
+  border: 2px solid rgba(255, 255, 255, 1);
+  border-radius: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+}
+ h1 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;   
+    color: white;
+ }
+
+.wrapper .input-box {
+    width: 90%;
+    margin: 10px;
+    height: 50px;
+    & > input {
+        height: 100%;
+        width: 100%;
+        padding: 5px;
+        border: none;
+        outline: none;
+        border-radius: 30px;
+    }
+}
+
+
+.forget-pass {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-weight: 200;   
+    position: relative;
+    left:30%;
+    margin: 10px 0;
+}
+
+button {
+    width: 90%;
+    height:40px;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    font-family: "Poppins", sans-serif;
+}
+
+
+.register-site {
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    color: white;
+}
