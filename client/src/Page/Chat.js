@@ -3,6 +3,7 @@ import "../Style/Chat.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import ChatHistory from "../Component/ChatHistory";
+import { toast } from "sonner";
 
 const Chat = ({ socket }) => {
   const [Search, setSearch] = useState("");
@@ -18,7 +19,7 @@ const Chat = ({ socket }) => {
       try {
         console.log(user.user_id);
         const result = await axios.get(
-          `http://localhost:4000/User/getFriends?user_id=${user.user_id}`
+          `http://localhost:4002/User/getFriends?user_id=${user.user_id}`
         );
         setFriends(result.data);
         if (result.data.length > 0) {
@@ -39,7 +40,7 @@ const Chat = ({ socket }) => {
   const setConversationCom = async (friend_id, user_id) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/User/Conversation",
+        "http://localhost:4002/User/Conversation",
         {
           friend_id: friend_id,
           user_id: user_id,
@@ -59,12 +60,18 @@ const Chat = ({ socket }) => {
       sender: user.email,
       status: "sent",
     };
-    console.log(messageData);
-    const sentMessage = await socket.emit("sendMessage", messageData);
+    
+    if (message === '') {
+      toast.warning("you haven't typed a message");
+    } else {
+      const sentMessage = await socket.emit("sendMessage", messageData);  
+    }
+    
     setMessage("");
   };
 
   return (
+    
     <div className="Container">
       <div className="row clearfix">
         <div className="col-lg-12">
@@ -188,15 +195,15 @@ const Chat = ({ socket }) => {
               <div className="chat-message clearfix">
                 <div className="input-group mb-0">
                   <div className="input-group-prepend">
-                    <span className="input-group-text">
-                      <button onClick={SendMessage}>
+                    <span className="input-group-text h-12 mt-1">
+                      <button onClick={SendMessage} className="h-12">
                         <i className="fa fa-send"></i>
                       </button>
                     </span>
                   </div>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control h-12"
                     placeholder="Enter text here..."
                     onChange={(e) => {
                       setMessage(e.target.value);

@@ -11,7 +11,7 @@ const ChatHistory = ({ conversation, selectedFriends, setConversation }) => {
       if (conversation) {
         try {
           const response = await axios.get(
-            `http://localhost:4000/User/GetMessageFromAConversation?conversationid=${conversation.conversationid}`
+            `http://localhost:4002/User/GetMessageFromAConversation?conversationid=${conversation.conversationid}`
           );
           const messages = response.data;
           const sortedMessages = messages.sort(
@@ -27,7 +27,7 @@ const ChatHistory = ({ conversation, selectedFriends, setConversation }) => {
     const setConversationCom = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:4000/User/Conversation",
+          "http://localhost:4002/User/Conversation",
           {
             friend_id: selectedFriends.user_id,
             user_id: user.user_id,

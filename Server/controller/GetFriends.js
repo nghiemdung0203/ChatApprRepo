@@ -11,7 +11,7 @@ module.exports.GetFriends = async (req, res) => {
 
     // Get conversationIDs for the user
     const resultChats = await client.execute(
-      "SELECT conversationid FROM chats WHERE user_id = ?",
+      "SELECT conversationid FROM chats WHERE user_id = ? ALLOW FILTERING",
       [user_id],
       { prepare: true }
     );
