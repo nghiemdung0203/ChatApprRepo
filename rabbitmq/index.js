@@ -9,26 +9,20 @@ const port = 4001;
 
 app.use(express.json());
 
-app.get('/consume', async (req, res) => {
+var conver = '6b0454db-8954-4c1b-b33b-c8708d495607'
+// channel.assertQueue(conversationid);
+Consumer(conver)
+
+app.get('/push', async (req, res) => {
     const conversationid = req.query.conversationid;
-    const messageArray = [];
+    const { channel } = await initializeChannel();
     
+    await channel.sendToQueue(conver, Buffer.from(conversationid));
   
-    try {
-      const { channel } = await initializeChannel();
-      await channel.assertQueue(conversationid);
-      await channel.consume(conversationid, (msg) => {
-        let mess = JSON.parse(msg.content.toString());
-        messageArray.push(mess);
-        console.log(mess)
-      }, { noAck: true });
-      return res.status(200).send(messageArray)
-    } catch (error) {
-      console.error('Error consuming messages:', error);
-      res.status(500).send('Internal Server Error');
-    }
+    return res.status(200).send(conversationid)
   });
   
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

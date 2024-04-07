@@ -13,7 +13,7 @@ const Chat = ({ socket }) => {
   const [selectedFriends, setSelectedFriends] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const user = jwtDecode(localStorage.getItem("user"));
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

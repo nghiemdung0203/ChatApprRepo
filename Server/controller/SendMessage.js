@@ -1,7 +1,7 @@
 const { send } = require("process");
 const client = require("../cassanndra-driver.js");
 const crypto = require("crypto");
-const {initializeChannel} = require('../../rabbitmq/queue/rabbitmq.js')
+const {initializeChannel} = require('../rabbitmq.js')
 
 module.exports.SendMessage = async (socket, data) => {
   const { conversationid, message, last_counter, reply, sender, status } = data;
@@ -35,7 +35,7 @@ module.exports.SendMessage = async (socket, data) => {
         { prepare: true }
       );
       channel.assertQueue(conversationid);
-      channel.sendToQueue(conversationid, Buffer.from([messageid, conversationid, new Date(currentTimestamp), message, lastcounter, sender, status]))
+      channel.sendToQueue(conversationid, Buffer.from())
     } else {
       // Insert the new message with the updated last_counter value and a reply reference
       await client.execute(
