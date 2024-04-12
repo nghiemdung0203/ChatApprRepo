@@ -30,5 +30,5 @@ const initializeChannel = async () => {
 };
 
 // Export the initializeChannel function
-module.exports = { initializeChannel };
+module.exports = {initializeChannel} 
 

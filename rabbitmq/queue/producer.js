@@ -1,7 +1,5 @@
 const { initializeChannel } = require("./rabbitmq");
 
-module.exports.Producer = async (conversationid, messageData) => {
+module.exports.Producer = async (friend_id, messageData) => {
   const { channel } = await initializeChannel();
-  channel.assertQueue(conversationid);
-  channel.sendToQueue(conversationid, Buffer.from(messageData));
 };

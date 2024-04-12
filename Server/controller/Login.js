@@ -1,6 +1,7 @@
 const client = require("../cassanndra-driver");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const { setUser_id, getUser_id } = require("../Global Variable/userId");
 
 module.exports.Login = async (req, res) => {
   const { Email, Password } = req.body;
@@ -26,6 +27,8 @@ module.exports.Login = async (req, res) => {
         "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611",
         { expiresIn: "24h" }
       );
+      setUser_id(existEmail.rows[0].user_id.toString())
+      console.log(getUser_id())
       return res.status(200).send(token);
     } else {
       return res.status(400).send("incorrect password");

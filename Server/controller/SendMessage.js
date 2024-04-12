@@ -1,7 +1,9 @@
 const { send } = require("process");
 const client = require("../cassanndra-driver.js");
 const crypto = require("crypto");
-const {initializeChannel} = require('../rabbitmq.js')
+const {initializeChannel} = require('../rabbitmq.js');
+const { Producer } = require("../queue/producer.js");
+const { setUser_id } = require("../Global Variable/userId.js");
 
 module.exports.SendMessage = async (socket, data) => {
   const { conversationid, message, last_counter, reply, sender, status } = data;
@@ -9,7 +11,7 @@ module.exports.SendMessage = async (socket, data) => {
   const messageid = crypto.randomUUID();
   let lastcounter = parseInt(last_counter) + 1;
 
-  const { channel } = await initializeChannel();
+  // const { channel } = await initializeChannel();
 
   try {
     // First, update the last_counter value in the conversation table
@@ -19,7 +21,7 @@ module.exports.SendMessage = async (socket, data) => {
       { prepare: true }
     );
 
-    if (reply === null) {
+    if (reply === undefined) {
       // Insert the new message with the updated last_counter value
       await client.execute(
         "INSERT INTO messages (messageid, conversationid, createddate, message, order_sequence, sender, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -34,8 +36,19 @@ module.exports.SendMessage = async (socket, data) => {
         ],
         { prepare: true }
       );
-      channel.assertQueue(conversationid);
-      channel.sendToQueue(conversationid, Buffer.from())
+      
+      const allIds = await client.execute(`Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`, );
+      const uid = await client.execute('Select user_id from users where email = ? ALLOW FILTERING', [sender]);
+      var friendIds;
+      const userIdSet = new Set([uid.rows[0].user_id.toString()]);
+      allIds.rows.forEach((row) => {
+        if (!userIdSet.has(row.user_id)) {
+          friendIds=row.user_id;
+        }
+      });
+
+      Producer(friendIds, message)
+      
     } else {
       // Insert the new message with the updated last_counter value and a reply reference
       await client.execute(
@@ -52,8 +65,18 @@ module.exports.SendMessage = async (socket, data) => {
         ],
         { prepare: true }
       );
-      channel.assertQueue(conversationid);
-      channel.sendToQueue(conversationid, Buffer.from(JSON.stringify({messageid, conversationid, message, lastcounter, reply, sender, status})))
+      const allIds = await client.execute(`Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`, );
+      const uid = await client.execute('Select user_id from users where email = ? ALLOW FILTERING', [sender]);
+      var friendIds;
+      const userIdSet = new Set([uid.rows[0].user_id.toString()]);
+      allIds.rows.forEach((row) => {
+        if (!userIdSet.has(row.user_id)) {
+          friendIds=row.user_id;
+        }
+      });
+
+      Producer(friendIds, message)
+      
     }
 
     console.log("messageSent", "Gui thanh cong");

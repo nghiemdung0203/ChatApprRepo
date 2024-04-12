@@ -103,6 +103,13 @@ const Login = () => {
             }}
           />
           <input
+            type="password"
+            placeholder="ConfirmPassword"
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+            }}
+          />
+          <input
             type="file"
             onChange={(e) => {
               setFile(e.target.files[0]);

@@ -1,7 +1,7 @@
 const express = require('express');
 const { Producer } = require('./queue/producer');
 const { Consumer } = require('./queue/consumer');
-const { initializeChannel } = require('./queue/rabbitmq');
+const {initializeChannel} = require('./queue/rabbitmq');
 
 
 const app = express();
@@ -27,4 +27,3 @@ app.get('/push', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
