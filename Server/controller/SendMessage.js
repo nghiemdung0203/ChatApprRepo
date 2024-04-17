@@ -1,7 +1,7 @@
 const { send } = require("process");
 const client = require("../cassanndra-driver.js");
 const crypto = require("crypto");
-const {initializeChannel} = require('../rabbitmq.js');
+const { initializeChannel } = require("../rabbitmq.js");
 const { Producer } = require("../queue/producer.js");
 const { setUser_id } = require("../Global Variable/userId.js");
 
@@ -36,19 +36,41 @@ module.exports.SendMessage = async (socket, data) => {
         ],
         { prepare: true }
       );
-      
-      const allIds = await client.execute(`Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`, );
-      const uid = await client.execute('Select user_id from users where email = ? ALLOW FILTERING', [sender]);
+
+      //Lấy friendIds
+      const allIds = await client.execute(
+        `Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`
+      );
+      const uid = await client.execute(
+        "Select user_id from users where email = ? ALLOW FILTERING",
+        [sender]
+      );
       var friendIds;
       const userIdSet = new Set([uid.rows[0].user_id.toString()]);
       allIds.rows.forEach((row) => {
         if (!userIdSet.has(row.user_id)) {
-          friendIds=row.user_id;
+          friendIds = row.user_id;
         }
       });
 
-      Producer(friendIds, message)
-      
+      Producer(friendIds, {
+        conversationid,
+        messageid,
+        createddate: new Date(currentTimestamp),
+        message,
+        order_sequence: lastcounter,
+        sender,
+        status,
+      });
+      socket.emit("messageSent", {
+        conversationid,
+        messageid,
+        createddate: new Date(currentTimestamp),
+        message,
+        order_sequence: lastcounter,
+        sender,
+        status,
+      });
     } else {
       // Insert the new message with the updated last_counter value and a reply reference
       await client.execute(
@@ -65,22 +87,41 @@ module.exports.SendMessage = async (socket, data) => {
         ],
         { prepare: true }
       );
-      const allIds = await client.execute(`Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`, );
-      const uid = await client.execute('Select user_id from users where email = ? ALLOW FILTERING', [sender]);
+      const allIds = await client.execute(
+        `Select user_id from chats where conversationid = '${conversationid}' ALLOW FILTERING`
+      );
+      const uid = await client.execute(
+        "Select user_id from users where email = ? ALLOW FILTERING",
+        [sender]
+      );
       var friendIds;
       const userIdSet = new Set([uid.rows[0].user_id.toString()]);
       allIds.rows.forEach((row) => {
         if (!userIdSet.has(row.user_id)) {
-          friendIds=row.user_id;
+          friendIds = row.user_id;
         }
       });
 
-      Producer(friendIds, message)
-      
-    }
+      Producer(friendIds, {
+        conversationid,
+        messageid,
+        createddate: new Date(currentTimestamp),
+        message,
+        order_sequence: lastcounter,
+        sender,
+        status,
+      });
 
-    console.log("messageSent", "Gui thanh cong");
-    socket.emit("messageSent", "Gui thanh cong");
+      socket.emit("messageSent", {
+        conversationid,
+        messageid,
+        createddate: new Date(currentTimestamp),
+        message,
+        order_sequence: lastcounter,
+        sender,
+        status,
+      });
+    }
   } catch (err) {
     console.error("Error sending message:", err);
   }

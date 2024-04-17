@@ -1,5 +1,6 @@
   const client = require("../cassanndra-driver");
   const crypto = require("crypto");
+const { Consumer } = require("../queue/consumer");
 
   module.exports.Conversation = async (req, res) => {
     const { friend_id, user_id } = req.body;
@@ -27,6 +28,7 @@
         const Chatinfo = await client.execute(
           `Select * from chats where user_id='${user_id}' AND conversationid='${conversationidd}' ALLOW FILTERING`
         );
+
 
         const combinedInfo = {
           conversationid: existedConversation.rows[0].conversationid,

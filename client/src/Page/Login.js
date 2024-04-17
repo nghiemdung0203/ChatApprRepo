@@ -3,7 +3,8 @@ import "../Style/Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-const Login = () => {
+import { jwtDecode } from "jwt-decode";
+const Login = ({socket}) => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [Name, setName] = useState("");
@@ -26,6 +27,7 @@ const Login = () => {
         })
         .then((result) => {
           localStorage.setItem("user", result.data);
+          socket.emit('join', jwtDecode(localStorage.getItem("user")).user_id)
           toast.success("login successfully");
           navigate("/chat");
         });
