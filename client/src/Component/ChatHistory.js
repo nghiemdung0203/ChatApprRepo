@@ -42,7 +42,10 @@
             const sortedMessages = messages.sort(
               (a, b) => a.order_sequence - b.order_sequence
             );
-            setMessagesToUpdate(sortedMessages); // Cập nhật tin nhắn mới vào biến tạm thời
+            console.log(sortedMessages)
+            setMessagesToUpdate(sortedMessages); // Cập nhật tin nhắn mới vào biến tạm thời\
+            console.log(selectedFriends)
+            console.log(conversation)
           } catch (error) {
             console.error("Error fetching messages:", error);
           }
@@ -81,6 +84,7 @@
       // Clean up subscription when component unmounts
       return () => {
         socket.off("messageReceived");
+        socket.off("messageSent")
       };
     }, [socket]);
 
@@ -103,7 +107,7 @@
                   </span>
                   <img src={user.Avatar} alt="avatar" />
                 </div>
-                <div className="message other-message float-right">
+                <div className="message other-message float-right" style={{background: 'linear-gradient(to right, #FF4B2B, #FF416C) no-repeat 0 0 / cover', color: '#ffffff'}}>
                   {message.message}
                 </div>
               </li>

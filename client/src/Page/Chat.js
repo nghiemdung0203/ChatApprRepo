@@ -95,13 +95,16 @@
             <div className="card chat-app">
               <div id="plist" className="people-list">
                 <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">
-                      <i className="fa fa-search"></i>
+                  <div className="input-group-prepend" style={{height: '2em', top: '0.5em', position: 'relative'}}>
+                    <span className="input-group-text" style={{
+                      background: 'linear-gradient(to right, #FF4B2B, #FF416C) no-repeat 0 0 / cover'
+                    }}>
+                      <i className="fa fa-search" style={{color: '#ffffff'}}></i>
                     </span>
                   </div>
                   <input
                     type="text"
+                    style={{height: '2em'}}
                     className="form-control"
                     placeholder="Search..."
                     onChange={(e) => {
@@ -115,9 +118,10 @@
                       <li
                         className="clearfix"
                         key={friend.user_id}
-                        onClick={() => {
-                          setConversationCom(friend.user_id, user.user_id);
+                        onClick={async() => {
+                          await setConversationCom(friend.user_id, user.user_id);
                           setSelectedFriends(friend);
+                          console.log(selectedFriends)
                         }}
                       >
                         <img src={friend.avatar} alt="avatar" />
@@ -212,9 +216,9 @@
                 <div className="chat-message clearfix">
                   <div className="input-group mb-0">
                     <div className="input-group-prepend">
-                      <span className="input-group-text h-12 mt-1">
-                        <button onClick={(e) => {SendMessage(e)}} className="h-12">
-                          <i className="fa fa-send"></i>
+                      <span className="input-group-text h-12 mt-1" style={{height:'2.4em', position:'relative', top: '4px', background: 'linear-gradient(to right, #FF4B2B, #FF416C) no-repeat 0 0 / cover'}}>
+                        <button onClick={(e) => {SendMessage(e)}} className="h-12" style={{border: 'none', background: 'transparent'}}>
+                          <i className="fa fa-send" style={{color: '#ffffff'}}></i>
                         </button>
                       </span>
                     </div>
