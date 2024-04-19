@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from "react";
+  import React, { useEffect, useRef, useState } from "react";
   import axios from "axios";
   import { jwtDecode } from "jwt-decode";
 
@@ -6,6 +6,7 @@
     const [Messages, setMessages] = useState([]);
     const user = jwtDecode(localStorage.getItem("user"));
     const [messagesToUpdate, setMessagesToUpdate] = useState([]); // Biến mới để cập nhật tin nhắn mới
+    const lastMessageRef = useRef(null);
 
     const setConversationCom = async () => {
       try {
@@ -92,15 +93,21 @@
       // Cập nhật state Messages khi có tin nhắn mới
       setMessages(messagesToUpdate);
     }, [messagesToUpdate]);
+
+    useEffect(() => {
+      if (lastMessageRef.current) {
+        lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [Messages]);
     return (
       <div
         className="chat-history"
         style={{ height: "750px", overflowY: "auto" }}
       >
         <ul className="m-b-0">
-          {Messages.map((message) =>
+          {Messages.map((message, index) =>
             message.sender === user.email ? (
-              <li className="clearfix" key={message.messageid}>
+              <li className="clearfix" key={message.messageid} ref={index === Messages.length - 1 ? lastMessageRef : null}>
                 <div className="message-data text-right">
                   <span className="message-data-time">
                     {new Date(message.createddate).toLocaleString()}
@@ -112,7 +119,7 @@
                 </div>
               </li>
             ) : (
-              <li className="clearfix" key={message.messageid}>
+              <li className="clearfix" key={message.messageid} ref={index === Messages.length - 1 ? lastMessageRef : null}>
                 <div className="message-data">
                   <span className="message-data-time">
                     {new Date(message.createddate).toLocaleString()}

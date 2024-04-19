@@ -4,7 +4,9 @@
   import { jwtDecode } from "jwt-decode";
   import ChatHistory from "../Component/ChatHistory";
   import { toast } from "sonner";
-
+  import { IoPersonAddOutline, IoSearch } from "react-icons/io5";
+  import { FaCog } from "react-icons/fa";
+  import { useNavigate } from "react-router-dom";
   const Chat = ({ socket }) => {
     const [Search, setSearch] = useState("");
     const [Friends, setFriends] = useState([]);
@@ -180,30 +182,21 @@
                       </div>
                     </div>
                     <div className="col-lg-6 hidden-sm text-right">
-                      <a
-                        href="javascript:void(0);"
-                        className="btn btn-outline-secondary"
+                      <button
+                        className="btn btn-outline-secondary rounded-circle mr-2"
                       >
-                        <i className="fa fa-camera"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0);"
-                        className="btn btn-outline-primary"
+                        <IoPersonAddOutline />
+                      </button>
+                      <button
+                        className="btn btn-outline-primary rounded-circle mr-2"
                       >
-                        <i className="fa fa-image"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0);"
-                        className="btn btn-outline-info"
+                        <IoSearch />
+                      </button>
+                      <button
+                        className="btn btn-outline-info rounded-circle mr-2"
                       >
-                        <i className="fa fa-cogs"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0);"
-                        className="btn btn-outline-warning"
-                      >
-                        <i className="fa fa-question"></i>
-                      </a>
+                        <FaCog />
+                      </button>
                     </div>
                   </div>
                 </div>

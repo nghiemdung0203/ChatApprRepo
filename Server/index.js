@@ -7,8 +7,7 @@ const cors = require("cors");
 const UserRoutes = require("./routes/UserRoutes");
 const { SendMessage } = require("./controller/SendMessage");
 const { Consumer } = require("./queue/consumer");
-const { Conversation } = require("./controller/Conversation");
-const { getUser_id } = require("./Global Variable/userId");
+
 
 require("dotenv").config();
 
@@ -49,16 +48,13 @@ io.on("connection", async (socket) => {
     });
     console.log(`🔥:${socket.id} user disconnected`);
   });
-});
 
-const callConsumerRepeatedly = () => {
-  // Gọi Consumer cho từng user trong Map
   userSockets.forEach(async (socket, user_id) => {
     await Consumer(socket, user_id);
   });
-};
+});
 
-// Gọi hàm callConsumerRepeatedly mỗi giây
-setInterval(callConsumerRepeatedly, 1000);
+
+
 
 httpServer.listen(4002);
