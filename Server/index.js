@@ -25,13 +25,15 @@ const io = new Server(httpServer, {
 const userSockets = new Map();
 
 io.on("connection", async (socket) => {
-  socket.on("join", (user_id) => {
+  socket.on("join", async(user_id) => {
     // Lưu thông tin của user vào Map
     socket.join(`${user_id}`);
     userSockets.set(user_id, socket);
     
     console.log(`${user_id} is user_id`);
     console.log(`joined ${user_id}`);
+
+    await Consumer(socket, user_id);
   });
 
   socket.on("sendMessage", (data) => {

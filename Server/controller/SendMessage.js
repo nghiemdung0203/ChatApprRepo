@@ -52,6 +52,7 @@ module.exports.SendMessage = async (socket, data) => {
           friendIds = row.user_id;
         }
       });
+      console.log(friendIds)
 
       Producer(friendIds, {
         conversationid,
