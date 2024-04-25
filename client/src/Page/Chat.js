@@ -29,6 +29,7 @@
         );
         setConversation(response.data);
         setConversationSetComplete(true);
+        console.log(conversation)
       } catch (error) {
         console.error("Error setting conversation:", error);
       }
@@ -90,7 +91,6 @@
     };
 
     return (
-      
       <div className="Container">
         <div className="row clearfix">
           <div className="col-lg-12">
@@ -200,12 +200,14 @@
                     </div>
                   </div>
                 </div>
-                <ChatHistory
+                {
+                  conversation && <ChatHistory
                   selectedFriends={selectedFriends}
                   conversation={conversation}
                   setConversation={setConversation}
                   socket={socket}
                 />
+                }
                 <div className="chat-message clearfix">
                   <div className="input-group mb-0">
                     <div className="input-group-prepend">
