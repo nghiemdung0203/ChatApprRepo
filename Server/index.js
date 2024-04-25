@@ -50,11 +50,13 @@ io.on("connection", async (socket) => {
     });
     console.log(`🔥:${socket.id} user disconnected`);
   });
-
-  userSockets.forEach(async (socket, user_id) => {
-    await Consumer(socket, user_id);
-  });
 });
+
+
+userSockets.forEach(async (socket, user_id) => {
+  await Consumer(socket, user_id);
+});
+
 
 
 

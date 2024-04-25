@@ -69,7 +69,9 @@
       // Subscribe to the "messageReceived" event
       socket.on("messageReceived", (message) => {
         console.log('Received message:', message);
-        AddMessages(message);
+        if (message.conversationid === conversation.conversationid) {
+          AddMessages(message);
+        }
         console.log(Messages); // Sử dụng Messages để xem giá trị hiện tại của state
         setConversationCom();
       });

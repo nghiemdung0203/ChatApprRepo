@@ -3,11 +3,11 @@ const { getUser_id } = require("../Global Variable/userId");
 const { initializeChannel } = require("../rabbitmq");
 
 module.exports.Consumer = async (socket, id) => {
-  // const conversationid = req.query.conversation
 
   try {
     const { channel } = await initializeChannel();
     channel.assertQueue(id);
+    console.log(id);
     channel.consume(
       id,
       (msg) => {
