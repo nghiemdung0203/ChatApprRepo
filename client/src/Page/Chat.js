@@ -72,6 +72,9 @@
 
 
 
+useEffect(() => {
+  socket.emit('join', jwtDecode(localStorage.getItem("user")).user_id)
+},[])
 
     const SendMessage = async (e) => {
       const messageData = {

@@ -1,25 +1,31 @@
-const { getUser_id } = require("../Global Variable/userId");
-
-const { initializeChannel } = require("../rabbitmq");
+const { mqttClient } = require("../Mqtt/mqtt");
+const processedMessages = new Set();
 
 module.exports.Consumer = async (socket, id) => {
-
   try {
-    const { channel } = await initializeChannel();
-    channel.assertQueue(id);
-    console.log(id);
-    channel.consume(
-      id,
-      (msg) => {
-        const messageData = JSON.parse(msg.content.toString());
-        console.log(`Received msg: ${messageData}`);
-        socket.emit("messageReceived",messageData);
-        console.log(msg.content.toString());
-      },
-      { noAck: true }
-    );
-    console.log("Consumer: ", id);
+    mqttClient.subscribe(id, (err) => {
+      if (err) {
+        console.error(`Error subscribing to topic ${id}:`, err);
+        return;
+      }
+      console.log(`Subscribed to topic: ${id}`);
+    });
+
+    mqttClient.on("message", (topic, message) => {
+      if (topic === id) {
+        const messageData = JSON.parse(message.toString());
+        const messageId = messageData.messageId || `${messageData.conversationid}:${messageData.message}:${messageData.order_sequence}`;
+
+        if (!processedMessages.has(messageId)) {
+          processedMessages.add(messageId);
+          console.log(`Received message on topic ${topic}:`, messageData);
+          socket.emit('messageReceived', messageData)
+        } else {
+          console.log(`Duplicate message received: ${messageId}`);
+        }
+      }
+    });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
